@@ -9,6 +9,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 
 class Admin @Inject()(db: Database) extends Controller {
+
   def showAll = Action {
     db.withConnection { implicit connection =>
       val parser: RowParser[Tour] = Macro.namedParser[Tour]

@@ -14,3 +14,6 @@ GET           /admin/tours         controllers.Admin.showAll
 POST          /admin/create        controllers.Admin.create
 PUT           /admin/update        controllers.Admin.update
 DELETE        /admin/delete        controllers.Admin.delete(id: Long)
+
+# Akka test
+GET           /akka                controllers.Application.sayHello(name: String)
