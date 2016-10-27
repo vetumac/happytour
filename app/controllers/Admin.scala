@@ -13,16 +13,13 @@ class Admin @Inject()(db: Database) extends Controller {
     db.withConnection { implicit connection =>
       val parser: RowParser[Tour] = Macro.namedParser[Tour]
       val result: List[Tour] = SQL("SELECT * FROM TOUR").as(parser.*)
-
       implicit val tourWrites = Json.writes[Tour]
-
       val res = Json.toJson(result)
-
       Ok(res)
     }
   }
 
-  def add = Action { request =>
+  def create = Action { request =>
     val jsonTour = request.body.asJson
     implicit val tourReads = Json.reads[Tour]
     val tour = Json.fromJson(jsonTour.get).get
@@ -34,4 +31,26 @@ class Admin @Inject()(db: Database) extends Controller {
       Ok(tour + " added successful with id=" + id)
     }
   }
+
+  def update() = Action { request =>
+    val jsonTour = request.body.asJson
+    implicit val tourReads = Json.reads[Tour]
+    val tour = Json.fromJson(jsonTour.get).get
+    db.withConnection { implicit connection =>
+      SQL("UPDATE TOUR SET NAME={name}, PRICE={price}, DURATION={duration}, TRANSFER={transfer} WHERE ID={id}")
+        .on("id" -> tour.id, "name" -> tour.name, "price" -> tour.price, "duration" -> tour.duration, "transfer" -> tour.transfer)
+        .executeUpdate()
+      Ok(tour + " update successful")
+    }
+  }
+
+  def delete(id: Long) = Action {
+    db.withConnection { implicit connection =>
+      SQL("DELETE FROM TOUR WHERE ID={id}")
+        .on("id" -> id)
+        .execute()
+      Ok("Tour " + id + " remove successfully")
+    }
+  }
+
 }
