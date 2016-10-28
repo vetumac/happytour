@@ -25,7 +25,7 @@ class User @Inject()(db: Database) extends Controller {
 
       val res = Json.toJson(result)
 
-      Ok(res)
+      Ok(res + "\n")
     }
   }
 }

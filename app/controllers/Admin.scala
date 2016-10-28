@@ -15,7 +15,7 @@ class Admin @Inject()(db: Database) extends Controller {
       val result: List[Tour] = SQL("SELECT * FROM TOUR").as(parser.*)
       implicit val tourWrites = Json.writes[Tour]
       val res = Json.toJson(result)
-      Ok(res)
+      Ok(res + "\n")
     }
   }
 
@@ -28,7 +28,7 @@ class Admin @Inject()(db: Database) extends Controller {
         SQL("INSERT INTO TOUR(NAME, PRICE, DURATION, TRANSFER) values ({name}, {price}, {duration}, {transfer})")
           .on("name" -> tour.name, "price" -> tour.price, "duration" -> tour.duration, "transfer" -> tour.transfer)
           .executeInsert()
-      Ok(tour + " added successful with id=" + id)
+      Ok(tour + " added successful with id=" + id + "\n")
     }
   }
 
@@ -40,7 +40,7 @@ class Admin @Inject()(db: Database) extends Controller {
       SQL("UPDATE TOUR SET NAME={name}, PRICE={price}, DURATION={duration}, TRANSFER={transfer} WHERE ID={id}")
         .on("id" -> tour.id, "name" -> tour.name, "price" -> tour.price, "duration" -> tour.duration, "transfer" -> tour.transfer)
         .executeUpdate()
-      Ok(tour + " update successful")
+      Ok(tour + " update successful" + "\n")
     }
   }
 
@@ -49,7 +49,7 @@ class Admin @Inject()(db: Database) extends Controller {
       SQL("DELETE FROM TOUR WHERE ID={id}")
         .on("id" -> id)
         .execute()
-      Ok("Tour " + id + " remove successfully")
+      Ok("Tour " + id + " remove successfully" + "\n")
     }
   }
 
